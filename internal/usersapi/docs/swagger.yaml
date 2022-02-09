@@ -14,21 +14,6 @@ definitions:
       password:
         type: string
     type: object
-  request.UserRequest:
-    properties:
-      country:
-        type: string
-      email:
-        type: string
-      firstname:
-        type: string
-      lastname:
-        type: string
-      nickname:
-        type: string
-      password:
-        type: string
-    type: object
   request.UserUpdateRequest:
     properties:
       country:
@@ -38,22 +23,24 @@ definitions:
       lastname:
         type: string
     type: object
+  response.UsersResponse:
+    properties:
+      country:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: string
+      lastname:
+        type: string
+      nickname:
+        type: string
+    type: object
 info:
   contact: {}
 paths:
-  /hc:
-    get:
-      consumes:
-      - application/json
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            additionalProperties: true
-            type: object
-      summary: health check for api.
   /users:
     get:
       consumes:
@@ -79,8 +66,13 @@ paths:
         "200":
           description: OK
           schema:
-            additionalProperties: true
-            type: object
+            items:
+              $ref: '#/definitions/response.UsersResponse'
+            type: array
+        "400":
+          description: Country is required
+          schema:
+            type: string
         "500":
           description: ""
       summary: get users by country.
@@ -96,7 +88,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/request.UserRequest'
+          $ref: '#/definitions/request.UserCreateRequest'
       produces:
       - application/json
       responses:
@@ -107,7 +99,9 @@ paths:
           schema:
             type: string
         "500":
-          description: ""
+          description: Internal Server Error
+          schema:
+            type: string
       summary: creates a new user by request body.
       tags:
       - users
@@ -127,8 +121,12 @@ paths:
       responses:
         "204":
           description: ""
+        "400":
+          description: User Id required
+          schema:
+            type: string
         "404":
-          description: User not found.
+          description: User not found
           schema:
             type: string
         "500":
@@ -136,7 +134,7 @@ paths:
       summary: deletes a user by param.
       tags:
       - users
-    put:
+    patch:
       consumes:
       - application/json
       description: updates a user.
@@ -146,7 +144,7 @@ paths:
         name: user
         required: true
         schema:
-          $ref: '#/definitions/request.UserRequest'
+          $ref: '#/definitions/request.UserUpdateRequest'
       - description: User ID
         in: path
         name: id
@@ -157,8 +155,12 @@ paths:
       responses:
         "200":
           description: ""
+        "400":
+          description: User Id required
+          schema:
+            type: string
         "404":
-          description: User not found.
+          description: User not found
           schema:
             type: string
         "500":

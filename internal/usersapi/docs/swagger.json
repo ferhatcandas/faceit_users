@@ -1,259 +1,305 @@
 {
-    "swagger": "2.0",
-    "info": {
-        "contact": {}
-    },
-    "paths": {
-        "/hc": {
-            "get": {
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "health check for api.",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
+  "swagger": "2.0",
+  "info": {
+    "contact": {}
+  },
+  "paths": {
+    "/users": {
+      "get": {
+        "description": "fetch users with filter.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "users"
+        ],
+        "summary": "get users by country.",
+        "parameters": [{
+            "type": "string",
+            "description": "User Country ex: UK",
+            "name": "country",
+            "in": "query",
+            "required": true
+          },
+          {
+            "type": "integer",
+            "description": "Default is 1",
+            "name": "pageIndex",
+            "in": "query"
+          },
+          {
+            "type": "integer",
+            "description": "Default is 20",
+            "name": "pageSize",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/response.UsersResponse"
+              }
             }
-        },
-        "/users": {
-            "get": {
-                "description": "fetch users with filter.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "get users by country.",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User Country ex: UK",
-                        "name": "country",
-                        "in": "query",
-                        "required": true
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Default is 1",
-                        "name": "pageIndex",
-                        "in": "query"
-                    },
-                    {
-                        "type": "integer",
-                        "description": "Default is 20",
-                        "name": "pageSize",
-                        "in": "query"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "500": {
-                        "description": ""
-                    }
-                }
-            },
-            "post": {
-                "description": "create new user.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "creates a new user by request body.",
-                "parameters": [
-                    {
-                        "description": "User Payload",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.UserRequest"
-                        }
-                    }
-                ],
-                "responses": {
-                    "201": {
-                        "description": ""
-                    },
-                    "409": {
-                        "description": "User already exist",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": ""
-                    }
-                }
+          },
+          "400": {
+            "description": "Country is required",
+            "schema": {
+              "type": "string"
             }
-        },
-        "/users/{id}": {
-            "put": {
-                "description": "updates a user.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "update user by request body.",
-                "parameters": [
-                    {
-                        "description": "User Payload",
-                        "name": "user",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/request.UserRequest"
-                        }
-                    },
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": ""
-                    },
-                    "404": {
-                        "description": "User not found.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": ""
-                    }
-                }
-            },
-            "delete": {
-                "description": "delete user.",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "users"
-                ],
-                "summary": "deletes a user by param.",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "204": {
-                        "description": ""
-                    },
-                    "404": {
-                        "description": "User not found.",
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    "500": {
-                        "description": ""
-                    }
-                }
-            }
+          },
+          "500": {
+            "description": ""
+          }
         }
-    },
-    "definitions": {
-        "request.UserCreateRequest": {
-            "type": "object",
-            "properties": {
-                "country": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "firstname": {
-                    "type": "string"
-                },
-                "lastname": {
-                    "type": "string"
-                },
-                "nickname": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
+      },
+      "post": {
+        "description": "create new user.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "users"
+        ],
+        "summary": "creates a new user by request body.",
+        "parameters": [{
+          "description": "User Payload",
+          "name": "user",
+          "in": "body",
+          "required": true,
+          "schema": {
+            "$ref": "#/definitions/request.UserCreateRequest"
+          }
+        }],
+        "responses": {
+          "201": {
+            "description": ""
+          },
+          "409": {
+            "description": "User already exist",
+            "schema": {
+              "type": "string"
             }
-        },
-        "request.UserRequest": {
-            "type": "object",
-            "properties": {
-                "country": {
-                    "type": "string"
-                },
-                "email": {
-                    "type": "string"
-                },
-                "firstname": {
-                    "type": "string"
-                },
-                "lastname": {
-                    "type": "string"
-                },
-                "nickname": {
-                    "type": "string"
-                },
-                "password": {
-                    "type": "string"
-                }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "type": "string"
             }
-        },
-        "request.UserUpdateRequest": {
-            "type": "object",
-            "properties": {
-                "country": {
-                    "type": "string"
-                },
-                "firstname": {
-                    "type": "string"
-                },
-                "lastname": {
-                    "type": "string"
-                }
-            }
+          }
         }
+      }
+    },
+    "/users/{id}": {
+      "delete": {
+        "description": "delete user.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "users"
+        ],
+        "summary": "deletes a user by param.",
+        "parameters": [{
+          "type": "string",
+          "description": "User ID",
+          "name": "id",
+          "in": "path",
+          "required": true
+        }],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "400": {
+            "description": "User Id required",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": ""
+          }
+        }
+      },
+      "patch": {
+        "description": "updates a user.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "users"
+        ],
+        "summary": "update user by request body.",
+        "parameters": [{
+            "description": "User Payload",
+            "name": "user",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/request.UserUpdateRequest"
+            }
+          },
+          {
+            "type": "string",
+            "description": "User ID",
+            "name": "id",
+            "in": "path",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "400": {
+            "description": "User Id required",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "schema": {
+              "type": "string"
+            }
+          },
+          "500": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/hc": {
+      "get": {
+        "description": "fetch users with filter.",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "tags": [
+          "healthcheck"
+        ],
+        "summary": "api healthcheck",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/response.HealthCheckResponse"
+              }
+            }
+          },
+          "500": {
+            "description": "Fail",
+            "schema": {
+              "type": "object",
+              "items": {
+                "$ref": "#/definitions/response.HealthCheckResponse"
+              }
+            }
+          }
+        }
+      }
     }
+  },
+  "definitions": {
+    "request.UserCreateRequest": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        }
+      }
+    },
+    "request.UserUpdateRequest": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        }
+      }
+    },
+    "response.HealthCheckResponse": {
+      "type": "object",
+      "properties": {
+        "mongo": {
+          "type": "string"
+        },
+        "serverPort": {
+          "type": "string"
+        },
+        "database": {
+          "type": "string"
+        }
+      }
+    },
+    "response.UsersResponse": {
+      "type": "object",
+      "properties": {
+        "country": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "firstname": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "lastname": {
+          "type": "string"
+        },
+        "nickname": {
+          "type": "string"
+        }
+      }
+    }
+  }
 }

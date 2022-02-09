@@ -24,3 +24,11 @@ func QueryIntOrDefaultValue(ctx echo.Context, param string, def int64) int64 {
 	}
 	return result
 }
+
+func QueryStringOrDefaultValue(ctx echo.Context, param string, def string) string {
+	value := ctx.QueryParam(param)
+	if value == "" {
+		return def
+	}
+	return value
+}

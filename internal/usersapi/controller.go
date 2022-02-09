@@ -94,8 +94,8 @@ func (u *UserController) CreateUser(c echo.Context) error {
 // @Produce json
 // @Param id path string true "User ID"
 // @Success 204
-// @Success 400 {string} string "User Id required"
-// @Success 404 {string} string "User not found"
+// @Failure 400 {string} string "User Id required"
+// @Failure 404 {string} string "User not found"
 // @Failure 500
 // @Router /users/{id} [delete]
 func (u *UserController) DeleteUser(c echo.Context) error {
@@ -147,13 +147,17 @@ func (u *UserController) DeleteUser(c echo.Context) error {
 // @Param country query string true "User Country ex: UK"
 // @Param pageIndex query int false "Default is 1"
 // @Param pageSize query int false "Default is 20"
-// @Success 200 {object} map[string]interface{}
+// @Success 200 {object} []response.UsersResponse
+// @Failure 400 {string} string "Country is required"
 // @Failure 500
 // @Router /users [get]
 func (u *UserController) GetUsers(c echo.Context) error {
 
-	param := httputils.ParamStringOrDefaultValue(c, "country", "")
-	pageIndex := httputils.QueryIntOrDefaultValue(c, "pageIndex", 0) - 1
+	param := httputils.QueryStringOrDefaultValue(c, "country", "")
+	if param == "" {
+		return c.String(http.StatusBadRequest, "Country is required")
+	}
+	pageIndex := httputils.QueryIntOrDefaultValue(c, "pageIndex", 1) - 1
 	pageSize := httputils.QueryIntOrDefaultValue(c, "pageSize", 20)
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*60)
@@ -180,10 +184,10 @@ func (u *UserController) GetUsers(c echo.Context) error {
 // @Param user body request.UserUpdateRequest true "User Payload"
 // @Param id path string true "User ID"
 // @Success 200
-// @Success 400 {string} string "User Id required"
-// @Success 404 {string} string "User not found"
+// @Failure 400 {string} string "User Id required"
+// @Failure 404 {string} string "User not found"
 // @Failure 500
-// @Router /users/{id} [put]
+// @Router /users/{id} [patch]
 func (u *UserController) UpdateUser(c echo.Context) error {
 	id := httputils.ParamStringOrDefaultValue(c, "id", "")
 	if id == "" {

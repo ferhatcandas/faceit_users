@@ -41,7 +41,7 @@ func Execute(args []string) error {
 	e.File("/swagger/doc.json", "./internal/usersapi/docs/swagger.json")
 	e.POST("/users", userController.CreateUser)
 	e.GET("/users", userController.GetUsers)
-	e.PUT("/users/:id", userController.UpdateUser)
+	e.PATCH("/users/:id", userController.UpdateUser)
 	e.DELETE("/users/:id", userController.DeleteUser)
 	e.GET("/hc", func(c echo.Context) error {
 		err := client.Ping(context.TODO(), nil)
