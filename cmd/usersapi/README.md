@@ -185,6 +185,7 @@ curl -X 'DELETE' \
 ```
 
 <hr>
+
 * **Description:** Health check
 * **URL**
   http://localhost:8000/hc
