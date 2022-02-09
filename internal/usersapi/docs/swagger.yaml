@@ -1,0 +1,169 @@
+definitions:
+  request.UserCreateRequest:
+    properties:
+      country:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      nickname:
+        type: string
+      password:
+        type: string
+    type: object
+  request.UserRequest:
+    properties:
+      country:
+        type: string
+      email:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+      nickname:
+        type: string
+      password:
+        type: string
+    type: object
+  request.UserUpdateRequest:
+    properties:
+      country:
+        type: string
+      firstname:
+        type: string
+      lastname:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /hc:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+      summary: health check for api.
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: fetch users with filter.
+      parameters:
+      - description: 'User Country ex: UK'
+        in: query
+        name: country
+        required: true
+        type: string
+      - description: Default is 1
+        in: query
+        name: pageIndex
+        type: integer
+      - description: Default is 20
+        in: query
+        name: pageSize
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: ""
+      summary: get users by country.
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: create new user.
+      parameters:
+      - description: User Payload
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: ""
+        "409":
+          description: User already exist
+          schema:
+            type: string
+        "500":
+          description: ""
+      summary: creates a new user by request body.
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: delete user.
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: ""
+        "404":
+          description: User not found.
+          schema:
+            type: string
+        "500":
+          description: ""
+      summary: deletes a user by param.
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: updates a user.
+      parameters:
+      - description: User Payload
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/request.UserRequest'
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "404":
+          description: User not found.
+          schema:
+            type: string
+        "500":
+          description: ""
+      summary: update user by request body.
+      tags:
+      - users
+swagger: "2.0"

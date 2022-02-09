@@ -1,0 +1,3 @@
+connectionString: "mongodb://mongo:mongopassword@{MONGO_HOST}:27017/admin"
+dbName: "faceit"
+rabbitmq: "amqp://admin:admin@{RABBIT_HOST}:5672/"

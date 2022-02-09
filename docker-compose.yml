@@ -1,0 +1,74 @@
+# Please refer https://aka.ms/HTTPSinContainer on how to setup an https developer certificate for your ASP .NET Core service.
+
+version: '3.4'
+
+services:
+  usersapi:
+    image: usersapi
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - APP=userapi
+      - RABBIT_HOST=rabbitmq
+      - MONGO_HOST=mongodb
+    restart: always
+    ports:
+      - 8000:8000
+    depends_on:
+      - mongodb
+    networks:
+      - rabbitmongo  
+  producer:
+    image: producer
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      - APP=producer
+      - RABBIT_HOST=rabbitmq
+      - MONGO_HOST=mongodb
+    restart: always
+    depends_on:
+      - rabbitmq
+      - mongodb
+    networks:
+      - rabbitmongo  
+  consumer:
+    image: consumer
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    restart: always
+    environment:
+      - APP=consumer
+      - RABBIT_HOST=rabbitmq
+    depends_on:
+      - rabbitmq
+    networks:
+      - rabbitmongo
+  rabbitmq:
+    image: docker.io/rabbitmq:management
+    hostname: "rabbitmq-cluster"
+    container_name: 'rabbitmq'
+    ports:
+      - 5672
+      - 15672:15672
+    restart: always
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    networks:
+      - rabbitmongo
+  mongodb:
+    image: mongo:latest
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongo
+      MONGO_INITDB_ROOT_PASSWORD: mongopassword
+    ports:
+      - 27017:27017
+    networks:
+      - rabbitmongo
+networks:
+  rabbitmongo:
+    driver: bridge
