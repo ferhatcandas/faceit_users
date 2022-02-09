@@ -63,7 +63,7 @@ eventhistories
 
 ## Transactional Outbox Pattern
 
-[Source]("https://microservices.io/patterns/data/transactional-outbox.html")
+[Source](https://microservices.io/patterns/data/transactional-outbox.html)
 
 
 
